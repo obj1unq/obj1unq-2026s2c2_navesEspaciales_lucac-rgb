@@ -100,6 +100,7 @@ describe "Velocidad Maxima" {
 
 	const naveP = new NaveDePasajeros(velocidad = 290000)
 	const naveC = new NaveDeCarga()
+	const naveCR = new NaveDeCargaRadioactiva(carga = 5000, estaSellada = true, velocidad = 10000)
 
 	test "Test velocidad maxima de nave de carga" {
 
@@ -108,11 +109,54 @@ describe "Velocidad Maxima" {
 
     }
 
-    test "Test velocidad nave de pasajeros"{
+    test "Test de velocidad nave de pasajeros"{
 
 		naveP.propulsar()
 		assert.equals(300000, naveP.velocidad())
 
     }
+
+	test "Test de nave con carga radioactiva"{
+
+		naveCR.recibirAmenaza()
+
+		assert.equals(0, naveCR.velocidad())
+		assert.equals(5000, naveCR.carga())
+
+	}
+
+	test "Test prepar naves para viajar"{
+
+		naveCR.estaSellada(false)
+		naveCR.velocidad(0)
+		naveP.prepararParaViajar()
+		naveCR.prepararParaViajar()
+
+    	assert.equals(300000, naveP.velocidad())
+    	assert.equals(15000, naveCR.velocidad())
+    	assert.that(naveCR.estaSellada())
+
+		const naveCombate1 = new NaveDeCombate(modo = ataque)
+		naveCombate1.prepararParaViajar()
+		assert.equals(["Volviendo a la base"], naveCombate1.mensajesEmitidos())
+		assert.equals(15000, naveCombate1.velocidad())
+
+
+		const naveCombate2 = new NaveDeCombate(modo = reposo)
+		naveCombate2.prepararParaViajar()
+		assert.equals(["Saliendo en misión"], naveCombate2.mensajesEmitidos())
+    	assert.equals(15000, naveCombate2.velocidad())
+
+	}
+
+	test "Test enfrentar enemgio"{
+
+		naveP.velocidad(0)
+		naveP.encontrarEnemigo()
+   		assert.equals(20000, naveP.velocidad())
+   		assert.that(naveP.alarma())
+
+	}
+
 
 }

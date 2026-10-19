@@ -9,9 +9,7 @@ class Nave {
 		velocidad =  (velocidad + cantidad).min(self.velocidadMaxima())
 	}
 
-	method propulsar(){
-		self.aumentarVelocidad(20000)
-	}
+	method propulsar(){ self.aumentarVelocidad(20000) }
 
 	method prepararParaViajar(){
 		self.aumentarVelocidad(15000)
@@ -37,9 +35,7 @@ class NaveDeCarga inherits Nave {
 
 	method excedidaDeVelocidad() = velocidad > 100000
 
-	override method recibirAmenaza() {
-		carga = 0
-	}
+	override method recibirAmenaza() { carga = 0 }
 	
 	method enFalta() = self.sobrecargada() and self.excedidaDeVelocidad()
 	
@@ -51,17 +47,15 @@ class NaveDeCarga inherits Nave {
 
 }
 
-class NaveDeCargaRadiactiva inherits NaveDeCarga{
+class NaveDeCargaRadioactiva inherits NaveDeCarga{
 
 	var property estaSellada = false
 
-	method sellar(){
-		estaSellada = true
-	}
+	method sellar(){ estaSellada = true }
 
-	override method recibirAmenaza(){
-		velocidad = 0
-	}
+	override method recibirAmenaza(){ velocidad = 0	}
+
+	override method prepararNave(){ self.sellar() }
 
 }
 
@@ -77,9 +71,7 @@ class NaveDePasajeros inherits Nave {
 
 	method estaEnPeligro() = velocidad > self.velocidadMaximaPermitida() or alarma
 
-	override method recibirAmenaza() {
-		alarma = true
-	}
+	override method recibirAmenaza() { alarma = true }
 
 }
 
@@ -96,13 +88,9 @@ class NaveDeCombate inherits Nave {
 
 	method estaInvisible() = velocidad < 10000 and modo.invisible()
 
-	override method recibirAmenaza() {
-		self.emitirMensaje(modo.mensajeAmenaza())
-	}
+	override method recibirAmenaza() { self.emitirMensaje(modo.mensajeAmenaza()) }
 
-	override method prepararNave(){ 
-		modo.prepararViaje(self)
-	}
+	override method prepararNave(){ modo.prepararViaje(self) }
 
 
 
@@ -117,7 +105,8 @@ object reposo {
 	}
 
 	method prepararViaje(nave){
-		nave.emitirMensaje("Saliendo en mision")
+		nave.emitirMensaje("Saliendo en misión")
+		nave.modo(ataque)
 	}
 
 }
@@ -128,10 +117,6 @@ object ataque {
 
 	method mensajeAmenaza(nave) {
 		nave.emitirMensaje("Enemigo encontrado")
-	}
-
-	method mensajeAmenaza(){
-
 	}
 
 	method prepararViaje(nave){
